@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kiểm tra từ vựng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .card {
+            background: white;
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .wrong {
+            color: red;
+        }
+        .correct {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Kiểm tra từ vựng 📝</h1>
+
+<div class="card" id="quiz">
+    <p><b>Câu:</b> <span id="count"></span>/60</p>
+    <p><b>Từ vựng:</b> <span id="word"></span></p>
+    <input type="text" id="answer" placeholder="Nhập nghĩa tiếng Việt">
+    <button onclick="submitAnswer()">Trả lời</button>
+</div>
+
+<script>
+const vocab = [
+["access","truy cập"],["addicted","thu hút"],["advertisement","quảng cáo"],
+["bargain","mặc cả"],["complain","lời phàn nàn"],
+["convenience store","cửa hàng tiện ích"],["customer","khách hàng"],
+["discount shop","cửa hàng hạ giá"],["display","trưng bày"],
+["dollar store","cửa hàng 1 đô"],["fair","hội chợ"],
+["goods","hàng hóa"],["farmer's market","chợ nông sản"],
+["home-grown","tự trồng"],["home-made","tự làm"],
+["item","món hàng"],["on sale","đang hạ giá"],
+["open-air market","chợ ngoài trời"],["price tag","nhãn giá"],
+["schedule","lịch trình"],["shopaholic","nghiện mua sắm"],
+["shopping","việc mua sắm"],["shopping center","trung tâm mua sắm"],
+["shopping list","danh sách mua sắm"],
+["speciality shop","cửa hàng đồ chuyên dụng"],
+["similar","tương tự"],["rarely","hiếm khi"],
+["fixed price","giá niêm yết"],["browse","duyệt"],
+["supermarket","siêu thị"],["online shop","cửa hàng trực tuyến"],
+["outdoor","ngoài trời"],["specific","cụ thể"],
+["outstanding","nổi bật"],["assistant","trợ lí"],
+["spicy","cay"],["never","không bao giờ"],
+["whole","toàn bộ"],["birthday cake","bánh sinh nhật"],
+["neighborhood","hàng xóm"],["expire","hết hạn"],
+["backpack","balo"],["advertise","quảng cáo"],
+["yellowish","hơi vàng"],["buy goods","mua hàng hóa"],
+["attract","thu hút"],["touch","chạm"],
+["try on","mặc thử"],["year-round","quanh năm"],
+["wander","lang thang"],["advantage","lợi thế"],
+["disadvantage","bất lợi"],["popularity","sự phổ biến"],
+["mainly","chủ yếu"],["credit card","thẻ tín dụng"],
+["worth","đáng giá"],["shuttle bus","xe buýt đưa đón"],
+["brand","thương hiệu"],["service","dịch vụ"],
+["episode","tập phim"]
+];
+
+let index = 0;
+let wrongList = [];
+
+function showWord() {
+    document.getElementById("count").innerText = index + 1;
+    document.getElementById("word").innerText = vocab[index][0];
+    document.getElementById("answer").value = "";
+}
+
+function submitAnswer() {
+    let user = document.getElementById("answer").value.trim().toLowerCase();
+    let correct = vocab[index][1].toLowerCase();
+
+    if (user !== correct) {
+        wrongList.push({
+            word: vocab[index][0],
+            correct: vocab[index][1],
+            user: user || "(bỏ trống)"
+        });
+    }
+
+    index++;
+    if (index < vocab.length) {
+        showWord();
+    } else {
+        finish();
+    }
+}
+
+function finish() {
+    let correctCount = vocab.length - wrongList.length;
+    let score = (correctCount / vocab.length * 10).toFixed(2);
+
+    let html = `
+        <h2>🎯 Kết quả</h2>
+        <p>✔️ Đúng: ${correctCount}/60</p>
+        <p>❌ Sai: ${wrongList.length}</p>
+        <p>⭐ Điểm: <b>${score}/10</b></p>
+        <hr>
+        <h3>📌 Các từ làm sai</h3>
+    `;
+
+    if (wrongList.length === 0) {
+        html += "<p class='correct'>Không sai từ nào 🎉</p>";
+    } else {
+        wrongList.forEach((w, i) => {
+            html += `
+                <p class="wrong">
+                    ${i+1}. <b>${w.word}</b><br>
+                    ➜ Bạn trả lời: ${w.user}<br>
+                    ✔️ Đáp án đúng: ${w.correct}
+                </p>
+            `;
+        });
+    }
+
+    document.getElementById("quiz").innerHTML = html;
+}
+
+showWord();
+</script>
+
+</body>
+</html>
